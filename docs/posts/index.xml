@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Posts on Il blog di Stealth Guy</title>
+    <link>/posts/</link>
+    <description>Recent content in Posts on Il blog di Stealth Guy</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Sat, 14 Oct 2023 12:37:34 +0200</lastBuildDate><atom:link href="/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Ciao</title>
+      <link>/posts/ciao/</link>
+      <pubDate>Sat, 14 Oct 2023 12:37:34 +0200</pubDate>
+      
+      <guid>/posts/ciao/</guid>
+      <description>Ciao come stai? io tutto bene grazie</description>
+      <content>&lt;p&gt;Ciao come stai? io tutto bene grazie&lt;/p&gt;
+</content>
+    </item>
+    
+  </channel>
+</rss>
