@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Posts on Stealth Guy Blog</title>
+    <link>https://stealthguy.github.io/posts/</link>
+    <description>Recent content in Posts on Stealth Guy Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>it</language>
+    <lastBuildDate>Thu, 12 Oct 2023 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://stealthguy.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Modulazioni digitali</title>
+      <link>https://stealthguy.github.io/posts/modulazionidigitali/</link>
+      <pubDate>Thu, 12 Oct 2023 00:00:00 +0000</pubDate>
+      <guid>https://stealthguy.github.io/posts/modulazionidigitali/</guid>
+      <description>Vantaggi della Trasmissione Digitale La trasmissione digitale offre numerosi vantaggi rispetto a quella analogica:&#xA;Immunità al Rumore: I segnali digitali sono meno suscettibili alle interferenze e al rumore rispetto ai segnali analogici.&#xA;Elaborazione: La trasmissione digitale permette un&amp;rsquo;elaborazione intelligente delle informazioni, consentendo di correggere gli errori e migliorare l&amp;rsquo;affidabilità della comunicazione.&#xA;Flessibilità e Sicurezza: Il software gioca un ruolo importante nelle comunicazioni digitali, offre flessibilità e più sicurezza.&#xA;Comunicazione Multimediale: La digitalizzazione consente di rappresentare qualsiasi tipo di informazione in forma di bit, consentendo una comunicazione multimediale che trasmette dati, voce, video etc.</description>
+    </item>
+    <item>
+      <title>WLAN</title>
+      <link>https://stealthguy.github.io/posts/wlan/</link>
+      <pubDate>Thu, 12 Oct 2023 00:00:00 +0000</pubDate>
+      <guid>https://stealthguy.github.io/posts/wlan/</guid>
+      <description>La sigla &amp;ldquo;WLAN&amp;rdquo; indica una tecnologia che consente la comunicazione wireless tra dispositivi all&amp;rsquo;interno della stessa rete.&#xA;Le WLAN sono utilizzate per diversi scopi, tra cui:&#xA;Fornire accesso a una LAN senza l&amp;rsquo;uso di cavi. Creare una rete locale wireless senza la necessità di cablaggio. Collegare edifici diversi senza la necessità di stendere cavi tra di essi, utilizzando dispositivi detti &amp;ldquo;BRIDGE.&amp;rdquo; Lo standard WLAN è definito dall&amp;rsquo;IEEE con il nome 802.</description>
+    </item>
+  </channel>
+</rss>

@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="it">
+    <head>
+		
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+			<meta name="description" content="Appunti per esame di 5 superiore sulle WLAN">
+		
+		
+    		<script
+  id="MathJax-script"
+  async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"
+></script>
+<script>
+  MathJax = {
+    tex: {
+      displayMath: [
+        ["\\[", "\\]"],
+        ["$$", "$$"],
+      ], 
+      inlineMath: [["\\(", "\\)"]], 
+    },
+  };
+</script>
+
+  		
+
+		<title>WLAN &middot; Stealth Guy Blog</title>
+
+		
+		<link rel="stylesheet" href="/css/style.css">
+		<link rel="stylesheet" href="/css/fonts.css">
+		
+		<link rel="icon" href="/favicon.ico"/>
+		<link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png">
+		<link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png">
+		<link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+		
+		<link href="" rel="alternate" type="application/rss+xml" title="Stealth Guy Blog" />
+
+		<script src="/js/darkmode.js"></script>
+	</head>
+
+    <body>
+        		<nav class="nav">
+			<div class="nav-container">
+				<a href="/">
+					
+						<h2 class="nav-title">Stealth Guy Blog</h2>
+					
+				</a>
+				<ul>
+    
+    
+        <li>
+            <a href="/about/">
+                
+                <span>About</span>
+                
+            </a>
+        </li>
+    
+        <li>
+            <a href="/posts/">
+                
+                <span>Posts</span>
+                
+            </a>
+        </li>
+    
+</ul>
+			</div>
+		</nav>
+
+        <div id="darkModeToggle" onclick="toggleDarkMode()">
+  &#9680; 
+</div>
+
+        
+
+<main>
+	
+
+
+        <div class="post">
+		<div class="post-info">
+    <span>Scritto da</span>
+        Stealth Guy
+        <br>
+        <span>il&nbsp;</span><time datetime="2023-10-12 00:00:00 &#43;0000 UTC">12 ottobre 2023</time>
+</div>
+
+		<h1 class="post-title">WLAN</h1>
+<h3 class="post-subtitle">Appunti per esame di 5 superiore sulle WLAN</h3>
+<div class="post-line"></div>
+
+
+		
+
+		<blockquote>
+<p>La sigla &ldquo;WLAN&rdquo; indica una tecnologia che consente la comunicazione wireless tra dispositivi all&rsquo;interno della stessa rete.</p>
+</blockquote>
+<p>Le WLAN sono utilizzate per diversi scopi, tra cui:</p>
+<ul>
+<li>Fornire accesso a una LAN senza l&rsquo;uso di cavi.</li>
+<li>Creare una rete locale wireless senza la necessità di cablaggio.</li>
+<li>Collegare edifici diversi senza la necessità di stendere cavi tra di essi, utilizzando dispositivi detti &ldquo;BRIDGE.&rdquo;</li>
+</ul>
+<p><strong>Lo standard WLAN è definito dall&rsquo;IEEE con il nome 802.11.</strong></p>
+<p>All&rsquo;interno dello standard 802.11, sono emersi diversi sottostandard, tra cui:</p>
+<ul>
+<li>802.11b: Utilizza la frequenza di 2.4 GHz con una velocità di trasmissione di 11 Mbit/s.</li>
+<li>802.11g: Opera nella stessa frequenza a 2.4 GHz ma con una velocità di trasmissione di 54 Mbit/s.</li>
+<li>802.11n: Supporta sia le frequenze di 2.4 GHz che 5 GHz e utilizza la tecnica di trasmissione a banda larga OFDM (Orthogonal Frequency Division Multiplexing) per velocità di trasmissione elevate.</li>
+<li>802.11ac: Utilizza esclusivamente la frequenza di 5 GHz e offre una velocità di trasmissione ancora maggiore con l&rsquo;uso di tecnologie avanzate come MIMO (Multiple Input, Multiple Output) e OFDM.</li>
+<li>802.11ax: Noto anche come Wi-Fi 6, che offre ulteriori miglioramenti in termini di velocità e capacità.</li>
+</ul>
+<p>Nell&rsquo;ambito delle WLAN, rientrano anche tecnologie per le WPAN (Wireless Personal Area Network), come il Bluetooth, Zigbee e altre.</p>
+<h2 id="topologie-di-rete-wlan">Topologie di Rete WLAN</h2>
+<p>Ci sono due principali topologie di rete WLAN:</p>
+<ol>
+<li>
+<p><strong>WLAN con Infrastruttura:</strong> Queste reti includono un&rsquo;infrastruttura di rete. Un dispositivo noto come &ldquo;Access Point&rdquo; (AP) copre un&rsquo;area specifica con il suo segnale, creando una &ldquo;Basic Service Area&rdquo; (BSA). Gli utenti possono connettersi all&rsquo;Access Point, che costituisce il &ldquo;Basic Service Set&rdquo; (BSS). Ogni Access Point ha un indirizzo MAC univoco chiamato BSSID, e le reti hanno nomi identificativi chiamati SSID.</p>
+</li>
+<li>
+<p><strong>WLAN Ad Hoc:</strong> Questa topologia non richiede un&rsquo;infrastruttura di rete. I dispositivi si collegano direttamente tra loro, senza la necessità di un Access Point. Un esempio di questa configurazione è il &ldquo;Wi-Fi Direct,&rdquo; in cui due dispositivi possono connettersi senza un Access Point o un&rsquo;infrastruttura di rete.</p>
+</li>
+</ol>
+<h2 id="canali-radio">Canali Radio</h2>
+<p>Le frequenze delle reti wireless variano a seconda dello standard 802.11. Ad esempio:</p>
+<ul>
+<li>
+<p>802.11b e 802.11g utilizzano frequenze a 2.4 GHz con una larghezza di banda di 83.5 MHz. Questa banda è suddivisa in 14 canali di circa 20 MHz, parzialmente sovrapposti (in Europa sono disponibili solo 13 canali). Gli Access Point devono essere collocati sui canali più liberi e distanti tra loro per evitare interferenze.</p>
+</li>
+<li>
+<p>802.11n utilizza sia le frequenze a 2.4 GHz che a 5 GHz. I canali possono avere larghezze di banda di 20 MHz o 40 MHz. Questo standard utilizza la tecnica di trasmissione a banda larga OFDM (Orthogonal Frequency Division Multiplexing) per aumentare la velocità di trasmissione e supporta MIMO (Multiple Input, Multiple Output), consentendo l&rsquo;uso di fino a 4 antenne per trasmettere in parallelo.</p>
+</li>
+<li>
+<p>802.11ac utilizza esclusivamente le frequenze a 5 GHz, con canali da 20, 40, 80 o 160 MHz. Utilizza la tecnologia OFDM e QAM (Quadrature Amplitude Modulation) per ottenere alte velocità di trasmissione.</p>
+</li>
+<li>
+<p>Il più recente standard 802.11ax, noto come Wi-Fi 6 usa sia 2.4 che 5GHz. A 5GHz si possono utilizzare canali da 20 MHz, 40 MHz, 80 MHz, 160 MHz e persino 80+80 MHz per le applicazioni più esigenti in termini di larghezza di banda.</p>
+</li>
+</ul>
+<h2 id="architettura-wlan-ieee-80211-wi-fi">Architettura WLAN IEEE 802.11 (Wi-Fi)</h2>
+<p>Lo standard IEEE 802.11 definisce i protocolli a livello 2 del modello ISO/OSI e lo strato fisico (livello 1 OSI) per le reti WLAN. Il meccanismo di accesso al canale utilizzato è il CSMA/CA (Carrier Sense Multiple Access with Collision Avoidance).</p>
+<p>La struttura dei frame (pacchetti) WLAN comprende il Frame Body, che contiene i dati da trasmettere. Questa struttura è diversa da quella adottata dallo standard Ethernet. Il frame include un Header MAC con informazioni dello strato MAC, e un campo FCS (Frame Check Sequence) che consente di rilevare eventuali errori di trasmissione.</p>
+<p>Lo strato fisico delle WLAN varia a seconda degli standard 802.11 e delle specifiche tecniche utilizzate.</p>
+<h2 id="dispositivi-per-le-wlan">Dispositivi per le WLAN</h2>
+<p>Le WLAN coinvolgono diversi tipi di dispositivi, tra cui:</p>
+<ul>
+<li>
+<p><strong>Schede di rete WLAN:</strong> Queste schede sono conformi agli standard IEEE e possono avere antenne interne o esterne.</p>
+</li>
+<li>
+<p><strong>Access Point (AP):</strong> Gli Access Point coprono la loro area di servizio, sono collegati alla rete tramite una porta Ethernet e controllano il traffico wireless. Possono variare in potenza e raggio d&rsquo;azione, da 100 a 150 metri.</p>
+</li>
+<li>
+<p><strong>Repeater:</strong> Questi dispositivi estendono la copertura wireless, collegandosi ad altri Access Point o repeater tramite una connessione cablata.</p>
+</li>
+<li>
+<p><strong>Bridge:</strong> I bridge consentono di interconnettere LAN in posizioni diverse utilizzando una connessione wireless. Possono essere &ldquo;punto-punto&rdquo; per connettere due LAN o &ldquo;punto-multipunto&rdquo; per collegare più LAN a stella.</p>
+</li>
+<li>
+<p><strong>WLAN Controller:</strong> Questi dispositivi gestiscono la configurazione e la gestione centralizzata di più Access Point, in particolare in reti aziendali. Consentono di assegnare indirizzi IP, impostare SSID, configurare il canale operativo e applicare parametri di sicurezza.</p>
+</li>
+</ul>
+<p>La scelta del numero e della posizione di questi dispositivi dipende dalle esigenze della rete e dalle specifiche condizioni di utilizzo. È importante evitare sovrapposizioni e pianificare accuratamente la posizione degli Access Point per garantire una copertura uniforme.</p>
+<h2 id="sicurezza-nelle-wlan">Sicurezza nelle WLAN</h2>
+<p>La sicurezza nelle WLAN è fondamentale. Alcuni standard di sicurezza includono:</p>
+<ul>
+<li>
+<p><strong>WEP (Wired Equivalent Privacy):</strong> Un sistema di crittografia debole che include le modalità &ldquo;Open System&rdquo; (nessuna autenticazione) e &ldquo;Shared Key&rdquo; (autenticazione basata sulla chiave di crittografia). Questo standard è noto per la sua vulnerabilità.</p>
+</li>
+<li>
+<p><strong>WPA (Wi-Fi Protected Access):</strong> Un&rsquo;evoluzione del WEP, il WPA offre opzioni come WPA-PSK (condivisone una passphrase) e WPA Enterprise (autenticazione tramite un server RADIUS). È più sicuro del WEP ma ancora vulnerabile a attacchi.</p>
+</li>
+<li>
+<p><strong>WPA2:</strong> Un miglioramento significativo rispetto al WPA, utilizza crittografia AES (Advanced Encryption Standard) ed è considerato sicuro.</p>
+</li>
+<li>
+<p><strong>WPA3:</strong> L&rsquo;ultima versione del protocollo di sicurezza Wi-Fi è WPA3.</p>
+</li>
+</ul>
+<p>In aggiunta alle funzionalità di sicurezza, ci sono anche pratiche di sicurezza consigliate, come ridurre al minimo la potenza dell&rsquo;AP, disabilitare la trasmissione del SSID per creare una rete nascosta, utilizzare la crittografia AES, filtrare gli indirizzi MAC e cambiare le password di configurazione con password robuste.</p>
+<h2 id="wpan-wireless-personal-area-network">WPAN (Wireless Personal Area Network)</h2>
+<blockquote>
+<p>Le WPAN sono delle reti wireless di dimensioni ridotte, spesso con topologia ad hoc e con un raggio massimo di circa 10 metri. Le WPAN vengono utilizzate per interconnettere dispositivi wireless personali.</p>
+</blockquote>
+<p>Un esempio noto di tecnologia WPAN è il Bluetooth, una tecnologia wireless a corto raggio e a basso consumo energetico che opera attorno ai 2,4 GHz. Il Bluetooth è stato sviluppato per sostituire i cablaggi e le connessioni a infrarossi. Esistono diverse versioni del Bluetooth, tra cui:</p>
+<ul>
+<li><strong>Bluetooth Classic:</strong> Lo standard originario con una velocità di trasmissione di 1 Mbit/s (Basic Rate).</li>
+<li><strong>Bluetooth Low Energy (BLE):</strong> Caratterizzato da un basso consumo energetico, permette a dispositivi di funzionare per anni senza sostituire le batterie.</li>
+<li><strong>Bluetooth High Speed:</strong> Aumenta la velocità di trasmissione lorda, arrivando a 3 Mbit/s.</li>
+</ul>
+<p>Oltre al Bluetooth, esistono altre tecnologie WPAN, come Zigbee, che forniscono opzioni per reti wireless personali di piccole dimensioni.</p>
+<h2 id="domande-e-risposte">Domande e risposte</h2>
+<p><strong>1 Che cosa si intende per WLAN?</strong>
+Con WLAN wireless LAN si indica l&rsquo; insieme delle tecnologie che permettono la comunicazione a distanza tra dispositivi wireless e la loro connessione alle risorse condivise</p>
+<p><strong>2 Quali sono i principali standard per le WLAN?</strong>
+Gli standard principali sono gli IEEE 802.11x tra cui l&rsquo; 802.11b 802.11g 802.11n 802.11ac, fanno parte anche bluethoot e zigbee</p>
+<p><strong>3 Che cosa si intende per WiFi?</strong></p>
+<p>Il wifi è una tecnologia per la connessione a distanza dei dispositivi di rete, la connessione può avvenire con infrastruttura oppure ad hoc</p>
+<p><strong>4 Indicare se la sequente affermazione è vera o falsa:</strong>
+«Gli apparati WiFi sono conformi agli standard IEEE
+802.3 per quanto concerne le tecniche di trasmissio.
+ne via radio».
+falso</p>
+<p><strong>5 È possibile realizzare una WLAN senza alcuna infrastruttura di rete?</strong>
+Sì, usando una wlan ad hoc come il wifi direct</p>
+<p><strong>6 Indicare se la seguente affermazione è vera o falsa:</strong>
+«Una WLAN Ad Hoc permette la comunicazione di-
+retta fra PC dotati di schede di rete WiFi».
+vero</p>
+
+
+		
+	</div>
+
+	<div class="pagination">
+		<a href="/about/" class="left arrow">&#8592;</a>
+		<a href="/posts/modulazionidigitali/" class="right arrow">&#8594;</a>
+
+		<a href="#" class="top">Top</a>
+	</div>
+</main>
+
+
+        		<footer>
+			
+			<span>
+			&copy; <time datetime="2024-03-18 19:16:21.806027 &#43;0100 CET m=&#43;0.257023823">2024</time> . Creato con <a href='https://gohugo.io'>Hugo</a> usando il tema <a href='https://github.com/EmielH/tale-hugo/'>Tale</a>.
+			</span>
+		</footer>
+
+    </body>
+</html>

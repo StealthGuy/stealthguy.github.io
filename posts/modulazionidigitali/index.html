@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="it">
+    <head>
+		
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+			<meta name="description" content="Appunti per esame di 5 superiore sulle modulazioni digitali">
+		
+		
+    		<script
+  id="MathJax-script"
+  async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"
+></script>
+<script>
+  MathJax = {
+    tex: {
+      displayMath: [
+        ["\\[", "\\]"],
+        ["$$", "$$"],
+      ], 
+      inlineMath: [["\\(", "\\)"]], 
+    },
+  };
+</script>
+
+  		
+
+		<title>Modulazioni digitali &middot; Stealth Guy Blog</title>
+
+		
+		<link rel="stylesheet" href="/css/style.css">
+		<link rel="stylesheet" href="/css/fonts.css">
+		
+		<link rel="icon" href="/favicon.ico"/>
+		<link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png">
+		<link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png">
+		<link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+		
+		<link href="" rel="alternate" type="application/rss+xml" title="Stealth Guy Blog" />
+
+		<script src="/js/darkmode.js"></script>
+	</head>
+
+    <body>
+        		<nav class="nav">
+			<div class="nav-container">
+				<a href="/">
+					
+						<h2 class="nav-title">Stealth Guy Blog</h2>
+					
+				</a>
+				<ul>
+    
+    
+        <li>
+            <a href="/about/">
+                
+                <span>About</span>
+                
+            </a>
+        </li>
+    
+        <li>
+            <a href="/posts/">
+                
+                <span>Posts</span>
+                
+            </a>
+        </li>
+    
+</ul>
+			</div>
+		</nav>
+
+        <div id="darkModeToggle" onclick="toggleDarkMode()">
+  &#9680; 
+</div>
+
+        
+
+<main>
+	
+
+
+        <div class="post">
+		<div class="post-info">
+    <span>Scritto da</span>
+        Stealth Guy
+        <br>
+        <span>il&nbsp;</span><time datetime="2023-10-12 00:00:00 &#43;0000 UTC">12 ottobre 2023</time>
+</div>
+
+		<h1 class="post-title">Modulazioni digitali</h1>
+<h3 class="post-subtitle">Appunti per esame di 5 superiore sulle modulazioni digitali</h3>
+<div class="post-line"></div>
+
+
+		
+
+		<h2 id="vantaggi-della-trasmissione-digitale">Vantaggi della Trasmissione Digitale</h2>
+<p>La trasmissione digitale offre numerosi vantaggi rispetto a quella analogica:</p>
+<ul>
+<li>
+<p><strong>Immunità al Rumore:</strong> I segnali digitali sono meno suscettibili alle interferenze e al rumore rispetto ai segnali analogici.</p>
+</li>
+<li>
+<p><strong>Elaborazione:</strong> La trasmissione digitale permette un&rsquo;elaborazione intelligente delle informazioni, consentendo di correggere gli errori e migliorare l&rsquo;affidabilità della comunicazione.</p>
+</li>
+<li>
+<p><strong>Flessibilità e Sicurezza:</strong> Il software gioca un ruolo importante nelle comunicazioni digitali, offre flessibilità e più sicurezza.</p>
+</li>
+<li>
+<p><strong>Comunicazione Multimediale:</strong> La digitalizzazione consente di rappresentare qualsiasi tipo di informazione in forma di bit, consentendo una comunicazione multimediale che trasmette dati, voce, video etc.</p>
+</li>
+<li>
+<p><strong>Comunicazione Unificata:</strong> In un ambiente digitale, tutti i tipi di comunicazione possono condividere lo stesso canale, semplificando la gestione e consentendo l&rsquo;integrazione di servizi.</p>
+</li>
+</ul>
+<h2 id="modello-di-sistema-digitale">Modello di Sistema Digitale</h2>
+<p>La trasmissione digitale segue un modello a tre fasi:</p>
+<ol>
+<li>
+<p><strong>Codifica di Sorgente:</strong> Questa fase comporta la compressione del segnale digitale per ridurre la quantità di dati da trasmettere, mantenendo comunque le informazioni essenziali.</p>
+</li>
+<li>
+<p><strong>Codifica di Canale:</strong> In questa fase, vengono adottate tecniche per aumentare la capacità del canale, espandendo la banda digitale e correggendo eventuali errori che potrebbero verificarsi durante la trasmissione.</p>
+</li>
+<li>
+<p><strong>Modulazione:</strong> La modulazione è il processo di generazione di un segnale con una forma adatta alla trasmissione su un canale specifico. Questo processo è fondamentale per adattare i dati digitali alla trasmissione su un mezzo fisico.</p>
+</li>
+</ol>
+<h2 id="teoria-dellinformazione">Teoria dell&rsquo;Informazione</h2>
+<p>La <strong>capacità di canale</strong> rappresenta la massima quantità di informazione che un canale può trasmettere (in modo affidabile) al secondo. Questo concetto è legato a due parametri chiave:</p>
+<ul>
+<li>
+<p><strong>Bit-Rate:</strong> La velocità di informazione con cui i dati vengono trasmessi.</p>
+</li>
+<li>
+<p><strong>Symbol-Rate:</strong> La velocità di modulazione, in cui ciascun simbolo può rappresentare uno o più bit, a seconda della codifica di canale.</p>
+</li>
+</ul>
+<p>La relazione tra Bit-Rate, Symbol-Rate e il numero di stati di modulazione (M) è data da:</p>
+<blockquote>
+<p>\(\text{Bit-Rate} = \text{Symbol-Rate} \cdot \log_2(M)\)</p>
+</blockquote>
+<p>Questo significa che all&rsquo;aumentare del numero di stati di modulazione, la capacità del canale aumenta. Tuttavia, è importante notare che il rumore del canale limita il numero finito di stati di modulazione possibili.</p>
+<h2 id="modulazioni-di-ampiezza">Modulazioni di Ampiezza</h2>
+<p>Le modulazioni di ampiezza variano in base al modo in cui l&rsquo;ampiezza del segnale portante viene manipolata per rappresentare dati. Alcuni esempi includono:</p>
+<ul>
+<li>
+<p><strong>OOK (On-Off Keying):</strong> Questa modulazione rappresenta un &ldquo;1&rdquo; come l&rsquo;invio del segnale e un &ldquo;0&rdquo; come l&rsquo;assenza di segnale.</p>
+</li>
+<li>
+<p><strong>ASK (Amplitude Shift Keying):</strong> In ASK, un &ldquo;1&rdquo; è rappresentato da un&rsquo;ampiezza A1 e un &ldquo;0&rdquo; da un&rsquo;ampiezza A0 (con A0 = 0, otteniamo OOK).</p>
+</li>
+</ul>
+<p>Queste sono le modulazioni solitamente impiegate dai radiocomandi</p>
+<h2 id="modulazioni-di-fase">Modulazioni di Fase</h2>
+<p>Le modulazioni di fase coinvolgono la variazione della fase del segnale portante per rappresentare dati. Alcuni esempi includono:</p>
+<ul>
+<li>
+<p><strong>M-PSK (Modulazione di Fase a M Stati):</strong> In M-PSK, il segnale cambia di fase per rappresentare dati. Ad esempio, &ldquo;0&rdquo; potrebbe essere 0 gradi e &ldquo;1&rdquo; 180 gradi.</p>
+</li>
+<li>
+<p><strong>M-DPSK (Modulazione di Fase Differenziale a M Stati):</strong> Simile a M-PSK, ma tiene conto delle differenze di fase tra simboli adiacenti.</p>
+</li>
+</ul>
+<p>Usate in WAN, UMTS, TV SAT etc.</p>
+<h2 id="modulazioni-miste-di-ampiezza-e-fase">Modulazioni Miste di Ampiezza e Fase</h2>
+<p>Alcune modulazioni combinano variazioni di ampiezza e fase:</p>
+<ul>
+<li>
+<p><strong>MQAM (Modulazione Quadratura di Ampiezza e Fase):</strong> In MQAM, sia l&rsquo;ampiezza che la fase del segnale possono variare. Questo consente una grande varietà di stati su canali a basso rumore, ma comporta un&rsquo;efficienza spettrale elevata.</p>
+</li>
+<li>
+<p><strong>M-TCM (Modulazione a Tempo Continuo con Memoria):</strong> M-TCM combina MQAM con sistemi di correzione degli errori per migliorare la robustezza della trasmissione.</p>
+</li>
+</ul>
+<p>Usate in ponti radio, modem, adsl, tv digitale terrestre</p>
+<h2 id="modulazioni-di-frequenza">Modulazioni di Frequenza</h2>
+<p>Le modulazioni di frequenza coinvolgono la variazione della frequenza della portante per rappresentare dati. Alcuni esempi includono:</p>
+<ul>
+<li><strong>FSK (Frequency Shift Keying):</strong> In FSK, un &ldquo;0&rdquo; è rappresentato da una frequenza e un &ldquo;1&rdquo; da un&rsquo;altra frequenza.</li>
+</ul>
+<p>Usata in GSM, Cordless, Bluetooth</p>
+<h2 id="modulatore-i-q">Modulatore I-Q</h2>
+<blockquote>
+<p>Qualsiasi segnale modulato può assumere M stati di modulazione e può essere ottenuto come somma di due segnali sinusoidali con ampiezze opportune uno di tipo seno (in fase) e uno di tipo coseno (in quadratura)</p>
+</blockquote>
+<p>I modulatori I-Q (In-Phase e Quadrature) sono ampiamente utilizzati in modulazioni digitali multistrato. Questo approccio consente di ottenere una varietà di stati di modulazione e offre flessibilità nell&rsquo;adattamento del segnale per la trasmissione su canali specifici. I modulatori I-Q sono un elemento chiave nella realizzazione di sistemi di comunicazione digitale avanzati.</p>
+$$
+$$
+
+
+		
+	</div>
+
+	<div class="pagination">
+		<a href="/posts/wlan/" class="left arrow">&#8592;</a>
+
+		<a href="#" class="top">Top</a>
+	</div>
+</main>
+
+
+        		<footer>
+			
+			<span>
+			&copy; <time datetime="2024-03-18 19:16:21.80604 &#43;0100 CET m=&#43;0.257036693">2024</time> . Creato con <a href='https://gohugo.io'>Hugo</a> usando il tema <a href='https://github.com/EmielH/tale-hugo/'>Tale</a>.
+			</span>
+		</footer>
+
+    </body>
+</html>
