@@ -1,0 +1,1 @@
+.character-box{display:flex;align-items:flex-start;margin:2rem 0;color:#000}.character-avatar img{width:80px;border-radius:50%}.character-speech{background:#f1f1f1;padding:1rem;border-radius:20px;position:relative;margin-left:1rem}.character-speech::before{content:"";position:absolute;left:-15px;top:20px;width:0;height:0;border:10px solid transparent;border-right-color:#f1f1f1}

@@ -1,0 +1,150 @@
++++
+title = "Shortcodes"
+date = "2023-01-10"
+author = "Stealth Guy"
+tags = ['Appunti']
+draft = false
+emoji = "❤️"
++++
+
+{{< notice info >}}
+This is a notice info text.
+{{< /notice >}}
+
+{{< notice success >}}
+This is a notice success text.
+{{< /notice >}}
+
+{{< notice warning >}}
+This is a notice warning text.
+{{< /notice >}}
+
+{{< notice error >}}
+This is a notice error text.
+{{< /notice >}}
+
+- [ ] Task 1
+  - [x] Task 1.1 (completed)
+  - [ ] Task 1.2
+- [ ] Task 2
+- [x] Task 3
+
+This is a {{< color color="blue" text="blue text" >}}
+
+This is a {{< color color="green" text="green text" >}}
+
+This is a {{< color color="red" text="red text" >}}
+
+This is a {{< color color="orange" text="orange text" >}}
+
+This is a {{< color color="gray" text="gray text" >}}
+
+
+
+
+{{< diagram >}}
+sequenceDiagram
+    participant Alice
+    participant Bob
+    Alice->>Bob: Request
+    Bob->>Alice: Response
+{{< /diagram >}}
+
+{{< giphy AcfTF7tyikWyroP0x7 >}}
+
+
+---
+{{< github "torvalds" "linux" >}}
+
+{{< youtube id="qtIqKaDlqXo?start=120" autoplay="false" title="A New Hugo Site" >}}
+
+{{< google-doc url="https://docs.google.com/forms/d/e/1FAIpQLSf7XT26ijYpBGbMsUEVCJsDpbnMq6bXSEro1y-rCYExgNkg0Q/" >}}
+
+
+
+<i class='bx bx-rotate-left'></i>
+<i class='bx bx-check'></i>
+<i class='bx bx-download'></i>
+<i class='bx bx-star'></i>
+<i class='bx bx-file'></i>
+<i class='bx bxs-camera-movie'></i>
+<i class='bx bxs-lock-alt'></i>
+<i class='bx bxl-windows'></i>
+<i class='bx bxl-firefox'></i>
+<i class='bx bxl-docker'></i>
+<i class='bx bx-code'></i>
+<i class='bx bx-code-curly'></i>
+
+{{< img src="/DVPLC/scada/binary-component.png" alt="Description of image 1" loading="lazy" width="45%" height="auto" >}}
+
+This is a {{< color color="red" text="red text" >}}
+
+{{< notice info >}}
+This is a notice info text.
+{{< /notice >}}
+
+{{< notice success >}}
+This is a notice success text.
+{{< /notice >}}
+
+{{< notice warning >}}
+This is a notice warning text.
+{{< /notice >}}
+
+{{< notice error >}}
+This is a notice error text.
+{{< /notice >}}
+
+- [ ] Task 1
+  - [x] Task 1.1 (completed)
+  - [ ] Task 1.2
+- [ ] Task 2
+- [x] Task 3
+
+This is a {{< color color="blue" text="blue text" >}}
+This is a <span style="color:blue">blue text</span>
+
+This is a {{< color color="green" text="green text" >}}
+This is a <span style="color:green">green text</span>
+
+This is a {{< color color="red" text="red text" >}}
+This is a <span style="color:red">red text</span>
+
+This is a {{< color color="orange" text="orange text" >}}
+This is a <span style="color:orange">orange text</span>
+
+This is a {{< color color="theme" text="theme text" >}}
+This is a <span>theme text</span>
+
+
+
+
+{{< diagram >}}
+sequenceDiagram
+    participant Alice
+    participant Bob
+    Alice->>Bob: Request
+    Bob->>Alice: Response
+{{< /diagram >}}
+
+{{< giphy AcfTF7tyikWyroP0x7 >}}
+{{< github "torvalds" "linux" >}}
+{{< youtube id="qtIqKaDlqXo?start=120" autoplay="false" title="A New Hugo Site" >}}
+{{< google-doc url="https://docs.google.com/forms/d/e/1FAIpQLSf7XT26ijYpBGbMsUEVCJsDpbnMq6bXSEro1y-rCYExgNkg0Q/" >}}
+
+
+
+<i class='bx bx-rotate-left'></i>
+<i class='bx bx-check'></i>
+<i class='bx bx-download'></i>
+<i class='bx bx-star'></i>
+<i class='bx bx-file'></i>
+<i class='bx bxs-camera-movie'></i>
+<i class='bx bxs-lock-alt'></i>
+<i class='bx bxl-windows'></i>
+<i class='bx bxl-firefox'></i>
+<i class='bx bxl-docker'></i>
+<i class='bx bx-code'></i>
+<i class='bx bx-code-curly'></i>
+
+{{< img src="/DVPLC/scada/binary-component.png" alt="Description of image 1" loading="lazy" width="45%" height="auto" >}}
