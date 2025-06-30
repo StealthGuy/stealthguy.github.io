@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>CTF on Stealth Guy Blog</title>
+    <link>https://stealthguy.github.io/tags/ctf/</link>
+    <description>Recent content in CTF on Stealth Guy Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>it</language>
+    <lastBuildDate>Tue, 01 Jul 2025 00:07:23 +0200</lastBuildDate><atom:link href="https://stealthguy.github.io/tags/ctf/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Kaboom: TryHackMe - Industrial Intrusion - Task 8</title>
+      <link>https://stealthguy.github.io/kaboomthm/kaboom/</link>
+      <pubDate>Tue, 01 Jul 2025 00:07:23 +0200</pubDate>
+      
+      <guid>https://stealthguy.github.io/kaboomthm/kaboom/</guid>
+      <description>Writeup TL;DR: Crafting malicious Modbus packets and gaining a reverse shell by uploading a malicious PLC program.
+This challenge drops you into the shoes of the APT operator: With a single crafted Modbus, you over-pressurise the main pump, triggering a thunderous blow-out that floods the plant with alarms. While chaos reigns, your partner ghosts through the shaken DMZ and installs a stealth implant, turning the diversion’s echo into your persistent beachhead.</description>
+    </item>
+    
+  </channel>
+</rss>
